@@ -1,7 +1,7 @@
 'use server'
 import { supabase } from '@/lib/supabase/server'
-import { Card, CardContent } from "@/app/components/ui/card"
-import { ScrollArea } from "@/app/components/ui/scroll-area"
+import { Card, CardContent, CardFooter } from "@/components/ui/card"
+import { ScrollArea } from "@/components/ui/scroll-area"
 
 interface Message {
   id: string
@@ -34,7 +34,7 @@ export default async function MessageList({ boardId }: MessageListProps) {
   if (!messages.length) {
     return (
       <Card>
-        <CardContent className="p-6">
+        <CardContent className="p-3">
           <p className="text-gray-500 text-center">No messages yet. Be the first to post!</p>
         </CardContent>
       </Card>
@@ -43,18 +43,20 @@ export default async function MessageList({ boardId }: MessageListProps) {
 
   return (
     <div className="space-y-4">
-      <ScrollArea className="h-[500px]"> 
+      <ScrollArea className="max-h-96"> 
       {messages.map((message) => (
         <Card key={message.id}>
-          <CardContent className="p-6">
+          <CardContent className="p-2">
             <div className="flex justify-between items-start mb-2">
               <p className="font-medium">{message.author}</p>
-              <span className="text-sm text-gray-500">
-                {new Date(message.created_at).toLocaleString()}
-              </span>
             </div>
             <p className="text-gray-700 whitespace-pre-wrap">{message.content}</p>
           </CardContent>
+          <CardFooter className="p-2 text-sm text-gray-500">
+            <span className="ml-auto">
+              {new Date(message.created_at).toLocaleString()}
+            </span>
+          </CardFooter>
         </Card>
       ))}
       </ScrollArea>

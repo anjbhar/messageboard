@@ -23,5 +23,17 @@ export const boards: Board[] = [
     name: 'General',
     description: 'General discussions',
     slug: 'general'
+  },
+  {
+    id: 'cryptocurrency',
+    name: 'Cryptocurrency',
+    description: 'Discussion about cryptocurrency',
+    slug: 'cryptocurrency'
+  },
+  {
+    id: 'fitness',
+    name: 'Fitness',
+    description: 'Discussion about fitness',
+    slug: 'fitness'
   }
 ] 
