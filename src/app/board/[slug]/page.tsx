@@ -1,8 +1,8 @@
 import { boards } from '@/app/config/boards'
 import { notFound } from 'next/navigation'
 import { useParams } from 'next/navigation'
-import MessageForm from '@/app/components/MessageForm'
-import MessageList from '@/app/components/MessageList'
+import MessageForm from '@/components/MessageForm'
+import MessageList from '@/components/MessageList'
 
 interface BoardPageProps {
   params: {
