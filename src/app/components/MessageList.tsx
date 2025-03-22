@@ -1,38 +1,63 @@
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
+'use server'
+import { supabase } from '@/lib/supabase/server'
+import { Card, CardContent } from "@/app/components/ui/card"
+import { ScrollArea } from "@/app/components/ui/scroll-area"
 
 interface Message {
-  id: number
+  id: string
   content: string
   author: string
   created_at: string
 }
 
 interface MessageListProps {
-  messages: Message[]
+  boardId: string
 }
 
-export default function MessageList({ messages }: MessageListProps) {
+async function getMessages(boardId: string) {
+  const { data, error } = await supabase
+    .from('messages')
+    .select('*')
+    .eq('board_id', boardId)
+    .order('created_at', { ascending: false })
+  if (error) {
+    console.error('Error fetching messages:', error)
+    throw error
+  }
+
+  return data as Message[]
+}
+
+export default async function MessageList({ boardId }: MessageListProps) {
+  const messages = await getMessages(boardId)
+
+  if (!messages.length) {
+    return (
+      <Card>
+        <CardContent className="p-6">
+          <p className="text-gray-500 text-center">No messages yet. Be the first to post!</p>
+        </CardContent>
+      </Card>
+    )
+  }
+
   return (
     <div className="space-y-4">
-      {messages.map(message => (
+      <ScrollArea className="h-[500px]"> 
+      {messages.map((message) => (
         <Card key={message.id}>
-          <CardHeader>
-            <CardTitle className="text-lg">{message.author}</CardTitle>
-            <CardDescription>
-              {new Date(message.created_at).toLocaleDateString()} at {new Date(message.created_at).toLocaleTimeString()}
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <p className="text-gray-600 whitespace-pre-wrap">{message.content}</p>
+          <CardContent className="p-6">
+            <div className="flex justify-between items-start mb-2">
+              <p className="font-medium">{message.author}</p>
+              <span className="text-sm text-gray-500">
+                {new Date(message.created_at).toLocaleString()}
+              </span>
+            </div>
+            <p className="text-gray-700 whitespace-pre-wrap">{message.content}</p>
           </CardContent>
         </Card>
       ))}
+      </ScrollArea>
     </div>
   )
 } 
